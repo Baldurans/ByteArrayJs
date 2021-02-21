@@ -1,0 +1,47 @@
+{
+  "name": "byte-array",
+  "version": "1.0.0",
+  "description": "Convenient way to store and later retrieve bytes in sequence",
+  "author": "Oliver Leisalu",
+  "license": "MIT",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "dependencies": {
+    "base64-arraybuffer": "^0.2.0"
+  },
+  "devDependencies": {
+    "jest": "^26.6.3",
+    "ts-jest": "^26.5.1",
+    "typescript": "3.9.5"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Baldurans/SharedObjectsJS.git"
+  },
+  "scripts": {
+    "test": "jest",
+    "build": "tsc --build ./src/"
+  },
+  "engines": {
+    "node": ">= 8.10.0",
+    "yarn": ">= 1.21.1"
+  },
+  "bugs": {
+    "url": "https://github.com/Baldurans/SharedObjectsJS/issues"
+  },
+  "homepage": "https://github.com/Baldurans/SharedObjectsJS#readme",
+  "keywords": [
+    "byte-array",
+    "binary-array",
+    "JS",
+    "Javascript"
+  ],
+  "jest": {
+    "preset": "ts-jest",
+    "testEnvironment": "jsdom",
+    "rootDir": "test",
+    "testMatch": [
+      "**/?(*.)+(spec|test).ts?(x)"
+    ]
+  }
+}
