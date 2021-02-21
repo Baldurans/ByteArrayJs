@@ -5,12 +5,6 @@ Simple way to write binary data and later read it in same order.
 When:
 * Storing data in simple formats (like json) takes too much disc/network etc space.
 
-## Weakness?
-What ever you write you later need to read in same order or results will be corrupted.
-It would be recommended to add versioning to it, so you can read older and newer versions.
-Start thinking about binary structure only when you really need it and your overall structure is set 
-(you can easily store it as json for example).
-
 ## Example
 ```
 const writer = new BinaryArrayWriter();
@@ -32,6 +26,12 @@ expect(booleans).toEqual([true, false, false, true, true, false, true, true]);
 const reader2 = reader.readReader();
 expect(reader2.readInt16()).toEqual(10000);
 ```
+
+## Weakness of this approach
+What ever you write you later need to read back in same order or results will be corrupted.
+It would be recommended to add versioning to it, so you can read older and newer versions.
+Start thinking about binary structure only when you really need it and your overall structure is relatively stable. 
+(you can easily store it as json for example).
 
 ## License
 MIT - Do what ever you want with it. If you found it useful, let me know :)

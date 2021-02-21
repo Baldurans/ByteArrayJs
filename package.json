@@ -1,6 +1,6 @@
 {
-  "name": "byte-array",
-  "version": "1.0.0",
+  "name": "byte-array-sequential",
+  "version": "1.0.1",
   "description": "Convenient way to store and later retrieve bytes in sequence",
   "author": "Oliver Leisalu",
   "license": "MIT",
