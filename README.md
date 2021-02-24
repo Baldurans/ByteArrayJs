@@ -5,6 +5,11 @@ Simple way to write binary data and later read it in same order.
 When:
 * Storing data in simple formats (like json) takes too much disc/network etc space.
 
+## Install
+```
+npm install byte-array-sequential
+```
+
 ## Example
 ```
 const writer = new BinaryArrayWriter();
