@@ -6,8 +6,8 @@ export class ByteArrayWriter {
     private totalLength: number;
     private readonly data: Array<{
         length: number;
-        value: string | number;
-        method: "setInt8" | "setInt16" | "setInt32" | "setUint8" | "setUint16" | "setUint32" | "setFloat64"
+        value: string | number | bigint;
+        method: "setInt8" | "setInt16" | "setInt32" | "setUint8" | "setUint16" | "setUint32" | "setFloat64" | "setBigUint64"
     }>;
 
     constructor() {
@@ -15,7 +15,7 @@ export class ByteArrayWriter {
         this.data = [];
     }
 
-    public _write(value: string | number, length: number, method: "setInt8" | "setInt16" | "setInt32" | "setUint8" | "setUint16" | "setUint32" | "setFloat64") {
+    public _write(value: string | number | bigint, length: number, method: "setInt8" | "setInt16" | "setInt32" | "setUint8" | "setUint16" | "setUint32" | "setFloat64" | "setBigUint64") {
         this.data.push({
             length: length,
             value: value,
@@ -56,6 +56,10 @@ export class ByteArrayWriter {
     public writeFloat64(value: number) {
         return this._write(value, 8, 'setFloat64');
     };
+
+    public writeBigUint64(value: bigint) {
+        return this._write(value, 8, "setBigUint64");
+    }
 
     public writeWriter(writer: ByteArrayWriter) {
         if (!writer) {
