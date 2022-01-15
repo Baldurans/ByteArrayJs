@@ -4,3 +4,4 @@ disttest
 src/**/*.js
 .idea
 node_modules
+esm
