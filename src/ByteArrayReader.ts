@@ -92,6 +92,10 @@ export class ByteArrayReader {
         return this.offset;
     };
 
+    public hasUnreadBytes(): boolean {
+        return this.offset < this.buffer.byteLength;
+    }
+
     public static import(data: string): ByteArrayReader {
         return new ByteArrayReader(base64.decode(data));
     }

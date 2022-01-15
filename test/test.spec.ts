@@ -101,8 +101,11 @@ test("test writeWriter/readReader", () => {
 
     const reader = new ByteArrayReader(writer.getBuffer());
     const reader2 = reader.readReader();
+    expect(reader2.hasUnreadBytes()).toEqual(true)
     expect(reader2.readInt16()).toEqual(2055);
+    expect(reader2.hasUnreadBytes()).toEqual(true)
     expect(reader2.readUint8()).toEqual(77);
+    expect(reader2.hasUnreadBytes()).toEqual(false)
 });
 
 test("test boolean func", () => {
