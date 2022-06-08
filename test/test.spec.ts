@@ -60,6 +60,9 @@ test("main", () => {
         {value: 1 / 3, writeMethod: 'writeFloat64', readMethod: 'readFloat64'},
         {value: 1.12345e250, writeMethod: 'writeFloat64', readMethod: 'readFloat64'},
 
+        {value: 9007199254740991, writeMethod: 'writeFloat64', readMethod: 'readFloat64'},
+        {value: -9007199254740991, writeMethod: 'writeFloat64', readMethod: 'readFloat64'},
+
         {
             value: new BooleanByteMap().writeAll(false, true, false, true, false, true, false, true),
             expectedValue: 170, // it is reversed for better reading
