@@ -1,5 +1,5 @@
 import {BooleanByteMap} from "./BooleanByteMap";
-import base64 from "base64-arraybuffer";
+import {Base64} from "./Base64";
 
 export class ByteArrayWriter {
 
@@ -118,7 +118,7 @@ export class ByteArrayWriter {
     };
 
     public export(): string {
-        return base64.encode(this.getBuffer());
+        return Base64.arrayBufferToBase64(this.getBuffer());
     }
 
 }

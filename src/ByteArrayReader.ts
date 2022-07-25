@@ -1,5 +1,5 @@
 import {BooleanByteMap} from "./BooleanByteMap";
-import base64 from "base64-arraybuffer";
+import {Base64} from "./Base64";
 
 export class ByteArrayReader {
 
@@ -97,6 +97,6 @@ export class ByteArrayReader {
     }
 
     public static import(data: string): ByteArrayReader {
-        return new ByteArrayReader(base64.decode(data));
+        return new ByteArrayReader(Base64.base64ToArrayBuffer(data));
     }
 }
