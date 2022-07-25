@@ -13,7 +13,7 @@ export class ByteArrayReader {
         this.offset = 0;
     }
 
-    public _read(length: number, method: "getInt8" | "getInt16" | "getInt32" | "getUint8" | "getUint16" | "getUint32" | "getFloat64") {
+    public _read(length: number, method: "getInt8" | "getInt16" | "getInt32" | "getUint8" | "getUint16" | "getUint32" | "getFloat64" | "getBigUint64") {
         const value = this.dataView[method](this.offset);
         this.offset += length;
         return value;
@@ -33,31 +33,35 @@ export class ByteArrayReader {
     };
 
     public readInt8() {
-        return this._read(1, 'getInt8');
+        return this._read(1, 'getInt8') as number;
     };
 
     public readInt16() {
-        return this._read(2, 'getInt16');
+        return this._read(2, 'getInt16') as number;
     };
 
     public readInt32() {
-        return this._read(4, 'getInt32');
+        return this._read(4, 'getInt32') as number;
     };
 
     public readUint8() {
-        return this._read(1, 'getUint8');
+        return this._read(1, 'getUint8') as number;
     };
 
     public readUint16() {
-        return this._read(2, 'getUint16');
+        return this._read(2, 'getUint16') as number;
     };
 
     public readUint32() {
-        return this._read(4, 'getUint32');
+        return this._read(4, 'getUint32') as number;
     };
 
     public readFloat64() {
-        return this._read(8, 'getFloat64');
+        return this._read(8, 'getFloat64') as number;
+    };
+
+    public readBigUint64() {
+        return this._read(8, 'getBigUint64') as bigint;
     };
 
     public readReader() {

@@ -24,41 +24,53 @@ test("simple", () => {
     expect(reader2.readInt16()).toEqual(10000);
 });
 
+type PossibleValues = {
+    char: string;
+    "int8": number;
+    "int16": number;
+    "int32": number;
+    "uint8": number;
+    "uint16": number;
+    "uint32": number;
+    "float64": number;
+    "bigUint64": bigint;
+    "booleanMap": BooleanByteMap;
+}
+
+type Testable<ValueType extends keyof PossibleValues = keyof PossibleValues, ReadValueType extends keyof PossibleValues = keyof PossibleValues> = {
+    type: ValueType;
+    value: PossibleValues[ValueType];
+    expectedValue?: PossibleValues[ValueType];
+} | {
+    type: ValueType;
+    readType: ReadValueType;
+    value: PossibleValues[ValueType];
+    expectedValue?: PossibleValues[ReadValueType];
+
+};
+
+function getMethodName(type: "read" | "write", valueType: keyof PossibleValues) {
+    return type + valueType.charAt(0).toUpperCase() + valueType.slice(1);
+}
+
 test("main", () => {
 
-    const tests: Array<{
-            value: string,
-            writeMethod: "writeChar",
-            readMethod: "readChar"
-        }
-        |
-        {
-            value: number,
-            expectedValue?: number,
-            writeMethod: "writeInt8" | "writeInt16" | "writeInt32" | "writeUint8" | "writeUint16" | "writeUint32" | "writeFloat64",
-            readMethod: "readInt8" | "readInt16" | "readInt32" | "readUint8" | "readUint16" | "readUint32" | "readFloat64"
-        }
-        |
-        {
-            value: BooleanByteMap,
-            expectedValue: number,
-            writeMethod: "writeBooleanMap",
-            readMethod: "readBooleanMap"
-        }> = [
-        {value: 'a', writeMethod: 'writeChar', readMethod: 'readChar'},
+    const tests: Testable[] = [
+        {value: 'a', type: "char"},
 
-        {value: 255, expectedValue: -1, writeMethod: 'writeInt8', readMethod: 'readInt8'},
-        {value: -1, expectedValue: -1, writeMethod: 'writeUint8', readMethod: 'readInt8'},
-        {value: 255, writeMethod: 'writeInt16', readMethod: 'readInt16'},
-        {value: 255, writeMethod: 'writeInt32', readMethod: 'readInt32'},
+        {value: 255, expectedValue: -1, type: 'int8'},
+        {value: -1, expectedValue: -1, type: 'uint8', readType: 'int8'},
+        {value: 255, type: "int16"},
+        {value: 255, type: "int32"},
 
-        {value: 255, writeMethod: 'writeUint8', readMethod: 'readUint8'},
-        {value: -1, expectedValue: 255, writeMethod: 'writeUint8', readMethod: 'readUint8'},
-        {value: 255, writeMethod: 'writeUint16', readMethod: 'readUint16'},
-        {value: 255, writeMethod: 'writeUint32', readMethod: 'readUint32'},
+        {value: 255, type: "uint8"},
+        {value: -1, expectedValue: 255, type: "uint8"},
+        {value: 255, type: "uint16"},
+        {value: 255, type: "uint32"},
 
-        {value: 1 / 3, writeMethod: 'writeFloat64', readMethod: 'readFloat64'},
-        {value: 1.12345e250, writeMethod: 'writeFloat64', readMethod: 'readFloat64'},
+
+        {value: 1 / 3, type: 'float64'},
+        {value: 1.12345e250, type: 'float64'},
 
         {value: 9007199254740991, writeMethod: 'writeFloat64', readMethod: 'readFloat64'},
         {value: -9007199254740991, writeMethod: 'writeFloat64', readMethod: 'readFloat64'},
@@ -66,20 +78,21 @@ test("main", () => {
         {
             value: new BooleanByteMap().writeAll(false, true, false, true, false, true, false, true),
             expectedValue: 170, // it is reversed for better reading
-            writeMethod: 'writeBooleanMap',
-            readMethod: 'readBooleanMap'
+            type: "booleanMap"
         },
         {
             value: new BooleanByteMap().writeAll(true, false, true, false, true, false, true, false),
             expectedValue: 85, // it is reversed for better reading
-            writeMethod: 'writeBooleanMap',
-            readMethod: 'readBooleanMap'
-        }
+            type: "booleanMap"
+        },
+
+        {value: 1n, type: 'bigUint64'},
+        {value: BigInt(Number.MAX_SAFE_INTEGER) * 3n, type: 'bigUint64'},
     ];
 
     const writer = new ByteArrayWriter();
     for (let i = 0; i < tests.length; i++) {
-        (writer[tests[i].writeMethod] as any)(tests[i].value);
+        (writer[getMethodName("write", tests[i].type) as keyof ByteArrayWriter] as any)(tests[i].value);
     }
     const writer2 = new ByteArrayWriter();
     writer2.writeInt16(2055);
@@ -88,8 +101,9 @@ test("main", () => {
 
     const reader = new ByteArrayReader(writer.getBuffer());
     tests.forEach((test) => {
-        const expected = String((test as any).expectedValue !== undefined ? (test as any).expectedValue : test.value);
-        const value = String(reader[test.readMethod]());
+        const expected = String(test.expectedValue || test.value);
+        // Hack for typescript to work
+        const value = String(reader[getMethodName("read", ((test as any).readType as keyof PossibleValues | undefined) || test.type) as "readUint8"]());
         expect(value).toEqual(expected)
     })
 });
